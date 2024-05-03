@@ -1,0 +1,54 @@
+﻿USE [Test_DB]
+GO
+/****** Object:  StoredProcedure [dbo].[spGetProductsDetails]    Script Date: 26/04/2024 09:09:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[spGetProductsDetails]
+(
+	@ID INT = null,
+	@NAME NVARCHAR(50) = NULL,
+	@UNIT NVARCHAR(50) = NULL, 
+	@PRIX MONEY = NULL,
+	@DateAdded DATE = NULL,
+    @OnCreated INT = NULL,
+	@DateModified DATE = NULL,
+	@OnUpdated INT = NULL,
+	@Action NVARCHAR(8)
+)
+AS
+BEGIN
+	IF @Action = 'GetAll'
+	BEGIN
+		SELECT * FROM [dbo].[Products]
+	END
+
+	IF @Action = 'GetData'
+	BEGIN
+		SELECT * FROM [dbo].[Products] WHERE [Id]= @ID
+	END
+
+	IF @Action = 'Post'
+	BEGIN
+		INSERT INTO [dbo].[Products] VALUES (@NAME, @UNIT, @PRIX,@DateAdded,@OnCreated,@DateModified,@OnUpdated)
+	END
+
+	IF @Action = 'Put'
+	BEGIN
+		UPDATE [dbo].[Products] 
+		SET [Name] = @NAME,
+			[Unit] = @UNIT, 
+			[Prix] = @PRIX, 
+			[CreationOn]=@DateAdded ,
+			[OnCreated] = @OnCreated,
+			[UpdateOn]=@DateModified, 
+			[OnUpdated] = @OnUpdated 
+		WHERE [Id]= @ID
+	END
+
+	IF @Action = 'Delete'
+	BEGIN
+		DELETE FROM [dbo].[Products]  WHERE [Id] = @ID
+	END
+END
